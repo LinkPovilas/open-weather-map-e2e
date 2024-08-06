@@ -1,0 +1,10 @@
+{
+  /* Playwright supports TypeScript out of the box. Playwright reads and transforms tests into JavaScript. */
+  "compilerOptions": {
+    /* Playwright only supports baseUrl and paths options. */
+    "baseUrl": ".",
+    "strict": true,
+    /* Required by @typescript-eslint/prefer-nullish-coalescing. */
+    "strictNullChecks": true
+  }
+}
