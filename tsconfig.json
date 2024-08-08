@@ -5,6 +5,8 @@
     "baseUrl": ".",
     "strict": true,
     /* Required by @typescript-eslint/prefer-nullish-coalescing. */
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    /* TS2550 */
+    "lib": ["es2021", "dom"]
   }
 }

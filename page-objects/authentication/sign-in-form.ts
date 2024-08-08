@@ -1,13 +1,13 @@
-import { PageObject } from './page-object';
+import { PageObject } from '../page-object';
 
-export interface LoginData {
+export interface UserCredentials {
   email: string;
   password: string;
 }
 
-export class LoginForm extends PageObject {
+export class SignInForm extends PageObject {
   get emailField() {
-    return this.page.getByPlaceholder('Email');
+    return this.page.getByLabel('Email');
   }
 
   get passwordField() {
@@ -30,7 +30,12 @@ export class LoginForm extends PageObject {
     await this.submitButton.click();
   }
 
-  async loginAs({ email, password }: LoginData) {
+  async login(
+    { email, password }: UserCredentials = {
+      email: 'soenitavinted@proton.me',
+      password: 'WeatherSEBTest24*'
+    }
+  ) {
     await this.enterEmail(email);
     await this.enterPassword(password);
     await this.clickSubmit();

@@ -1,3 +1,3 @@
 export const endpoint = {
-  userLogin: () => '/users/login'
+  currentWeatherData: () => '/data/2.5/weather'
 };
