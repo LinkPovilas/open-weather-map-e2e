@@ -34,12 +34,7 @@ export class SignInForm extends PageObject {
     await this.submitButton.click();
   }
 
-  async login(
-    { email, password }: UserCredentials = {
-      email: 'soenitavinted@proton.me',
-      password: 'WeatherSEBTest24*'
-    }
-  ) {
+  async login({ email, password }: UserCredentials) {
     await this.enterEmail(email);
     await this.enterPassword(password);
     await this.clickSubmit();
