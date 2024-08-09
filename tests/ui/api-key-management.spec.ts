@@ -1,3 +1,4 @@
+import { noticeMessage } from 'data/ui/messages';
 import { it, expect } from 'fixtures';
 import { generateRandomApiKeyName } from 'utils/test-data-utils';
 
@@ -13,7 +14,7 @@ it.describe('API key management', () => {
     await apiKeyTable.clickEditKeyName(apiKey.name);
     await editApiKeyModal.updateApiKeyName(newApiKeyName);
     await expect(page.locator('body')).toContainText(
-      'API key was edited successfully'
+      noticeMessage.apiKeyEditedSuccessfully
     );
     const sameApiKeyAsBefore = await apiKeyTable.getApiKeyByName(newApiKeyName);
 

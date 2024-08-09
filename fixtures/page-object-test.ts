@@ -1,7 +1,10 @@
 import { test as base } from '@playwright/test';
-import { ApiKeyForm, ApiKeyTable, EditApiKeyModal } from 'page-objects/api-key';
-import { SignInForm } from 'page-objects/authentication';
-import { NavigationBar, UserDropdownMenu } from 'page-objects/navigation';
+import { ApiKeyForm } from 'page-objects/api-key/api-key-form';
+import { ApiKeyTable } from 'page-objects/api-key/api-key-table';
+import { EditApiKeyModal } from 'page-objects/api-key/edit-api-key-modal';
+import { SignInForm } from 'page-objects/authentication/sign-in-form';
+import { NavigationBar } from 'page-objects/navigation/navigation-bar';
+import { UserDropdownMenu } from 'page-objects/navigation/user-dropdown-menu';
 
 interface PageObject {
   signInForm: SignInForm;

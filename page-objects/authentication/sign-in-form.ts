@@ -18,6 +18,10 @@ export class SignInForm extends PageObject {
     return this.page.getByRole('button', { name: 'Submit' });
   }
 
+  get rememberMeCheckbox() {
+    return this.page.getByLabel('Remember me');
+  }
+
   async enterEmail(email: string) {
     await this.emailField.fill(email);
   }

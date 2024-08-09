@@ -1,4 +1,4 @@
-import { urlPath } from 'data/url-paths';
+import { urlPath } from 'data/ui/url-path';
 import { expect, it } from 'fixtures';
 
 it.describe('Navigation', () => {

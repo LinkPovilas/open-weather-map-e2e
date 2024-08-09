@@ -1,6 +1,6 @@
 import { generateRandomApiKeyName } from 'utils/test-data-utils';
 import { test as base, expect } from './page-object-test';
-import { urlPath } from 'data/url-paths';
+import { urlPath } from 'data/ui/url-path';
 
 interface ApiKey {
   name: string;

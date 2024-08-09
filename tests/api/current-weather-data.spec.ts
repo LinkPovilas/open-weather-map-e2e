@@ -1,9 +1,9 @@
-import { endpoint } from 'api/endpoint';
+import { endpoint } from 'data/api/endpoint';
 import { it, expect } from 'fixtures';
 import env from 'env';
-import { weatherDataSchema } from 'api/schemas/weather-data-schema';
-import { currentWeatherApiResponseErrorMessage } from 'api/api-response-error-messages';
-import { errorResponseScema } from 'api/schemas/error-response-schema';
+import { weatherDataSchema } from 'data/api/schemas/weather-data-schema';
+import { currentWeatherResponseError } from 'data/api/api-response-errors';
+import { errorResponseScema } from 'data/api/schemas/error-response-schema';
 
 it.describe('Current weather data API', () => {
   let url: URL;
@@ -120,9 +120,7 @@ it.describe('Current weather data API', () => {
     const data: unknown = await response.json();
     expect(() => errorResponseScema.parse(data)).not.toThrow();
     const parsedData = errorResponseScema.parse(data);
-    expect(parsedData).toEqual(
-      currentWeatherApiResponseErrorMessage.invalidApiKey
-    );
+    expect(parsedData).toEqual(currentWeatherResponseError.invalidApiKey);
   });
 
   it('should handle request with newly created API key', async ({
@@ -137,9 +135,7 @@ it.describe('Current weather data API', () => {
     const data: unknown = await response.json();
     expect(() => errorResponseScema.parse(data)).not.toThrow();
     const parsedData = errorResponseScema.parse(data);
-    expect(parsedData).toEqual(
-      currentWeatherApiResponseErrorMessage.invalidApiKey
-    );
+    expect(parsedData).toEqual(currentWeatherResponseError.invalidApiKey);
   });
 
   it('should handle request without latitude and longitude', async ({
@@ -151,8 +147,6 @@ it.describe('Current weather data API', () => {
     const data: unknown = await response.json();
     expect(() => errorResponseScema.parse(data)).not.toThrow();
     const parsedData = errorResponseScema.parse(data);
-    expect(parsedData).toEqual(
-      currentWeatherApiResponseErrorMessage.nothingToGeocode
-    );
+    expect(parsedData).toEqual(currentWeatherResponseError.nothingToGeocode);
   });
 });

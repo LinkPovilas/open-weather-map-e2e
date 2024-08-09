@@ -1,4 +1,4 @@
-export const currentWeatherApiResponseErrorMessage = {
+export const currentWeatherResponseError = {
   nothingToGeocode: {
     cod: 400,
     message: 'Nothing to geocode'
