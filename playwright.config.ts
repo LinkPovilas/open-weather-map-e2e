@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import env from 'env';
+import { env } from 'env';
 
 /**
  * See https://playwright.dev/docs/test-configuration.

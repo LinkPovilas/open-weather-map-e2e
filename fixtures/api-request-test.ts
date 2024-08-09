@@ -1,6 +1,6 @@
 import { APIRequestContext } from '@playwright/test';
 import { test as base } from './page-task-test';
-import env from 'env';
+import { env } from 'env';
 
 interface ApiRequest {
   request: APIRequestContext;

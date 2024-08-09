@@ -1,6 +1,6 @@
 import { endpoint } from 'data/api/endpoint';
 import { it, expect } from 'fixtures';
-import env from 'env';
+import { env } from 'env';
 import { weatherDataSchema } from 'data/api/schemas/weather-data-schema';
 import { currentWeatherResponseError } from 'data/api/api-response-errors';
 import { errorResponseScema } from 'data/api/schemas/error-response-schema';
