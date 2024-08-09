@@ -1,18 +1,13 @@
 import 'dotenv/config';
-import { cleanEnv, bool, url, makeValidator } from 'envalid';
+import { z } from 'zod';
 
-const apiKey = makeValidator((input) => {
-  if (/^[a-zA-Z0-9]{32}$/.test(input)) {
-    return input;
-  }
-  throw new Error('Invalid API key provided');
+const envSchema = z.object({
+  BASE_URL: z.string().url(),
+  BASE_API_URL: z.string().url(),
+  API_KEY: z.string().regex(/^[a-zA-Z0-9]{32}$/, 'Invalid API key provided'),
+  CI: z.boolean().default(false)
 });
 
-const env = cleanEnv(process.env, {
-  CI: bool({ default: false }),
-  BASE_URL: url(),
-  BASE_API_URL: url(),
-  API_KEY: apiKey()
-});
+const env = envSchema.parse(process.env);
 
 export default env;
