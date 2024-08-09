@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import { env } from 'env';
 
+export const authFilePath = 'playwright/.auth/user.json';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -35,7 +36,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/user.json'
+        storageState: authFilePath
       },
       dependencies: ['auth-setup']
     }
