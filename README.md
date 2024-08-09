@@ -26,4 +26,7 @@ npm run ui
 
 # Run the tests in debug mode.
 npm run debug
+
+# To open last HTML report run:
+npx playwright show-report
 ```
