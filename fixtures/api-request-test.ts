@@ -1,17 +1,16 @@
-import { APIRequestContext } from '@playwright/test';
 import { test as base } from './page-task-test';
 import { env } from 'env';
+import { endpoint } from 'data/api/endpoint';
 
 interface ApiRequest {
-  request: APIRequestContext;
+  currentWeatherDataUrl: URL;
 }
 
 export const test = base.extend<ApiRequest>({
-  request: async ({ browser }, use) => {
-    const browserContext = await browser.newContext({
-      baseURL: env.BASE_API_URL
-    });
-    const apiRequest = browserContext.request;
-    await use(apiRequest);
+  currentWeatherDataUrl: async ({}, use) => {
+    const url = new URL(env.BASE_API_URL);
+    url.pathname = endpoint.currentWeatherData();
+    url.searchParams.set('appid', env.API_KEY);
+    await use(url);
   }
 });

@@ -28,5 +28,11 @@ export default tseslint.config(
   },
   {
     ignores: ['playwright*', 'test-results']
+  },
+  {
+    files: ['fixtures/**/*-test.ts'],
+    rules: {
+      'no-empty-pattern': 'off'
+    }
   }
 );

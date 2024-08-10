@@ -1,6 +1,4 @@
-import { endpoint } from 'data/api/endpoint';
 import { it, expect } from 'fixtures';
-import { env } from 'env';
 import {
   WeatherData,
   weatherDataSchema
@@ -12,16 +10,9 @@ import {
 } from 'data/api/schemas/error-response-schema';
 
 it.describe('Current weather data API', () => {
-  let url: URL;
-
-  it.beforeEach(() => {
-    url = new URL(env.BASE_API_URL);
-    url.pathname = endpoint.currentWeatherData();
-    url.searchParams.set('appid', env.API_KEY);
-  });
-
   it('should return weather data for valid coordinates', async ({
-    request
+    request,
+    currentWeatherDataUrl: url
   }) => {
     const latitude = '44.34';
     const longitude = '10.99';
@@ -43,7 +34,10 @@ it.describe('Current weather data API', () => {
     );
   });
 
-  it('should return weather data for valid city name', async ({ request }) => {
+  it('should return weather data for valid city name', async ({
+    request,
+    currentWeatherDataUrl: url
+  }) => {
     const location = {
       cityName: 'Stockholm',
       countryCode: 'SE'
@@ -66,7 +60,8 @@ it.describe('Current weather data API', () => {
   });
 
   it('should return weather data for full location query', async ({
-    request
+    request,
+    currentWeatherDataUrl: url
   }) => {
     const location = {
       cityName: 'New York',
@@ -91,7 +86,10 @@ it.describe('Current weather data API', () => {
     );
   });
 
-  it('should return weather data for valid city ID', async ({ request }) => {
+  it('should return weather data for valid city ID', async ({
+    request,
+    currentWeatherDataUrl: url
+  }) => {
     const location = {
       cityId: '593116',
       cityName: 'Vilnius',
@@ -115,7 +113,8 @@ it.describe('Current weather data API', () => {
   });
 
   it('should return weather data for valid zip code and country code', async ({
-    request
+    request,
+    currentWeatherDataUrl: url
   }) => {
     const location = {
       zipCode: '00100',
@@ -138,7 +137,8 @@ it.describe('Current weather data API', () => {
   });
 
   it('should handle request without location query parameters', async ({
-    request
+    request,
+    currentWeatherDataUrl: url
   }) => {
     const response = await request.get(url.toString());
 
@@ -149,7 +149,10 @@ it.describe('Current weather data API', () => {
     expect(result.data).toEqual(currentWeatherResponseError.nothingToGeocode);
   });
 
-  it('should handle unauthorized request', async ({ request }) => {
+  it('should handle unauthorized request', async ({
+    request,
+    currentWeatherDataUrl: url
+  }) => {
     url.searchParams.delete('appid');
 
     const response = await request.get(url.toString());
@@ -162,7 +165,8 @@ it.describe('Current weather data API', () => {
 
   it('should handle request with newly created API key', async ({
     apiKey,
-    request
+    request,
+    currentWeatherDataUrl: url
   }) => {
     url.searchParams.set('appid', apiKey.value);
 
