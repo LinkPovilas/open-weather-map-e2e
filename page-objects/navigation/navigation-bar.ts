@@ -10,6 +10,9 @@ export class NavigationBar extends PageObject {
     super(page);
   }
 
+  /**
+   * Performs actions to navigate to the 'My API keys' page.
+   */
   async goToUserApiKeys() {
     await this.userMenu.goToMyApiKeys();
   }
