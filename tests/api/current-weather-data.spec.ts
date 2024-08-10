@@ -1,9 +1,15 @@
 import { endpoint } from 'data/api/endpoint';
 import { it, expect } from 'fixtures';
 import { env } from 'env';
-import { weatherDataSchema } from 'data/api/schemas/weather-data-schema';
+import {
+  WeatherData,
+  weatherDataSchema
+} from 'data/api/schemas/weather-data-schema';
 import { currentWeatherResponseError } from 'data/api/api-response-errors';
-import { errorResponseScema } from 'data/api/schemas/error-response-schema';
+import {
+  ErrorResponse,
+  errorResponseSchema
+} from 'data/api/schemas/error-response-schema';
 
 it.describe('Current weather data API', () => {
   let url: URL;
@@ -24,14 +30,17 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    expect(response.status()).toEqual(200);
-    const data: unknown = await response.json();
-    expect(() => weatherDataSchema.parse(data)).not.toThrow();
-    const parsedData = weatherDataSchema.parse(data);
-    expect(parsedData.coord).toEqual({
-      lon: Number(longitude),
-      lat: Number(latitude)
-    });
+    await expect(response).toHaveStatus(200);
+    const data = (await response.json()) as WeatherData;
+    expect(data).toMatchSchema(weatherDataSchema);
+    expect(data).toEqual(
+      expect.objectContaining({
+        coord: expect.objectContaining({
+          lon: Number(longitude),
+          lat: Number(latitude)
+        })
+      })
+    );
   });
 
   it('should return weather data for valid city name', async ({ request }) => {
@@ -43,12 +52,17 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    expect(response.status()).toEqual(200);
-    const data: unknown = await response.json();
-    expect(() => weatherDataSchema.parse(data)).not.toThrow();
-    const parsedData = weatherDataSchema.parse(data);
-    expect(parsedData.name).toEqual(location.cityName);
-    expect(parsedData.sys.country).toEqual(location.countryCode);
+    await expect(response).toHaveStatus(200);
+    const data = (await response.json()) as WeatherData;
+    expect(data).toMatchSchema(weatherDataSchema);
+    expect(data).toEqual(
+      expect.objectContaining({
+        name: location.cityName,
+        sys: expect.objectContaining({
+          country: location.countryCode
+        })
+      })
+    );
   });
 
   it('should return weather data for full location query', async ({
@@ -64,12 +78,17 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    expect(response.status()).toEqual(200);
-    const data: unknown = await response.json();
-    expect(() => weatherDataSchema.parse(data)).not.toThrow();
-    const parsedData = weatherDataSchema.parse(data);
-    expect(parsedData.name).toEqual(location.cityName);
-    expect(parsedData.sys.country).toEqual(location.countryCode);
+    await expect(response).toHaveStatus(200);
+    const data = (await response.json()) as WeatherData;
+    expect(data).toMatchSchema(weatherDataSchema);
+    expect(data).toEqual(
+      expect.objectContaining({
+        name: location.cityName,
+        sys: expect.objectContaining({
+          country: location.countryCode
+        })
+      })
+    );
   });
 
   it('should return weather data for valid city ID', async ({ request }) => {
@@ -78,17 +97,21 @@ it.describe('Current weather data API', () => {
       cityName: 'Vilnius',
       countryCode: 'LT'
     };
-
     url.searchParams.set('id', location.cityId);
 
     const response = await request.get(url.toString());
 
-    expect(response.status()).toEqual(200);
-    const data: unknown = await response.json();
-    expect(() => weatherDataSchema.parse(data)).not.toThrow();
-    const parsedData = weatherDataSchema.parse(data);
-    expect(parsedData.name).toEqual(location.cityName);
-    expect(parsedData.sys.country).toEqual(location.countryCode);
+    await expect(response).toHaveStatus(200);
+    const data = (await response.json()) as WeatherData;
+    expect(data).toMatchSchema(weatherDataSchema);
+    expect(data).toEqual(
+      expect.objectContaining({
+        name: location.cityName,
+        sys: expect.objectContaining({
+          country: location.countryCode
+        })
+      })
+    );
   });
 
   it('should return weather data for valid zip code and country code', async ({
@@ -103,12 +126,27 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    expect(response.status()).toEqual(200);
-    const data: unknown = await response.json();
-    expect(() => weatherDataSchema.parse(data)).not.toThrow();
-    const parsedData = weatherDataSchema.parse(data);
-    expect(parsedData.name).toEqual(location.cityName);
-    expect(parsedData.sys.country).toEqual(location.countryCode);
+    await expect(response).toHaveStatus(200);
+    const data = (await response.json()) as WeatherData;
+    expect(data).toMatchSchema(weatherDataSchema);
+    expect(data).toEqual(
+      expect.objectContaining({
+        name: location.cityName,
+        sys: expect.objectContaining({ country: location.countryCode })
+      })
+    );
+  });
+
+  it('should handle request without location query parameters', async ({
+    request
+  }) => {
+    const response = await request.get(url.toString());
+
+    await expect(response).toHaveStatus(400);
+    const data = (await response.json()) as ErrorResponse;
+    expect(data).toMatchSchema(errorResponseSchema);
+    const result = errorResponseSchema.safeParse(data);
+    expect(result.data).toEqual(currentWeatherResponseError.nothingToGeocode);
   });
 
   it('should handle unauthorized request', async ({ request }) => {
@@ -116,11 +154,10 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    expect(response.status()).toEqual(401);
-    const data: unknown = await response.json();
-    expect(() => errorResponseScema.parse(data)).not.toThrow();
-    const parsedData = errorResponseScema.parse(data);
-    expect(parsedData).toEqual(currentWeatherResponseError.invalidApiKey);
+    await expect(response).toHaveStatus(401);
+    const data = (await response.json()) as ErrorResponse;
+    expect(data).toMatchSchema(errorResponseSchema);
+    expect(data).toEqual(currentWeatherResponseError.invalidApiKey);
   });
 
   it('should handle request with newly created API key', async ({
@@ -131,22 +168,9 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    expect(response.status()).toEqual(401);
-    const data: unknown = await response.json();
-    expect(() => errorResponseScema.parse(data)).not.toThrow();
-    const parsedData = errorResponseScema.parse(data);
-    expect(parsedData).toEqual(currentWeatherResponseError.invalidApiKey);
-  });
-
-  it('should handle request without latitude and longitude', async ({
-    request
-  }) => {
-    const response = await request.get(url.toString());
-
-    expect(response.status()).toEqual(400);
-    const data: unknown = await response.json();
-    expect(() => errorResponseScema.parse(data)).not.toThrow();
-    const parsedData = errorResponseScema.parse(data);
-    expect(parsedData).toEqual(currentWeatherResponseError.nothingToGeocode);
+    await expect(response).toHaveStatus(401);
+    const data = (await response.json()) as ErrorResponse;
+    expect(data).toMatchSchema(errorResponseSchema);
+    expect(data).toEqual(currentWeatherResponseError.invalidApiKey);
   });
 });

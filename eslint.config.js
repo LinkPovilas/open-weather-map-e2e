@@ -27,6 +27,6 @@ export default tseslint.config(
     }
   },
   {
-    ignores: ['playwright-report', 'test-results']
+    ignores: ['playwright*', 'test-results']
   }
 );

@@ -70,4 +70,6 @@ const weatherDataSchema = z.object({
   cod: z.number()
 });
 
-export { weatherDataSchema };
+type WeatherData = z.infer<typeof weatherDataSchema>;
+
+export { weatherDataSchema, WeatherData };

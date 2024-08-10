@@ -5,4 +5,4 @@ import { test as pageTest } from './page-task-test';
 const test = mergeTests(apiTest, pageTest);
 
 export { test, test as it };
-export { expect } from '@playwright/test';
+export { expect } from './custom-matchers';
