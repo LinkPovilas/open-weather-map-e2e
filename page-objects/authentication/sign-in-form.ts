@@ -48,7 +48,7 @@ export class SignInForm extends PageObject {
   }
 
   /**
-   * Logs in a user with the provided email and password.
+   * Logs in with the provided email and password.
    *
    * @param {UserCredentials} credentials - The user's email and password.
    */
