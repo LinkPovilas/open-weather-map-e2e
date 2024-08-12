@@ -9,6 +9,7 @@ import {
   ErrorResponse,
   errorResponseSchema
 } from 'data/api/schemas/error-response-schema';
+import { constants as httpConstants } from 'http2';
 
 it.describe('Current weather data API', () => {
   it('should return weather data for valid coordinates', async ({
@@ -22,7 +23,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(200);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_OK);
     const data = (await response.json()) as WeatherData;
     expect(data).toMatchSchema(weatherDataSchema);
     expect(data).toEqual(
@@ -45,7 +46,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(200);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_OK);
     const data = (await response.json()) as WeatherData;
     expect(data).toMatchSchema(weatherDataSchema);
     expect(data).toEqual(
@@ -72,7 +73,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(200);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_OK);
     const data = (await response.json()) as WeatherData;
     expect(data).toMatchSchema(weatherDataSchema);
     expect(data).toEqual(
@@ -96,7 +97,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(200);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_OK);
     const data = (await response.json()) as WeatherData;
     expect(data).toMatchSchema(weatherDataSchema);
     expect(data).toEqual(
@@ -120,7 +121,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(200);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_OK);
     const data = (await response.json()) as WeatherData;
     expect(data).toMatchSchema(weatherDataSchema);
     expect(data).toEqual(
@@ -131,42 +132,52 @@ it.describe('Current weather data API', () => {
     );
   });
 
-  it('should return translated city name and description', async ({
-    request,
-    currentWeatherDataUrl
-  }) => {
-    const languageCode = 'FR';
-    const cityName = 'Warsaw';
-    const cityNameFr = 'Varsovie';
+  [
+    { languageCode: 'FR', localizedCityName: 'Varsovie' },
+    { languageCode: 'DE', localizedCityName: 'Warschau' },
+    { languageCode: 'IT', localizedCityName: 'Varsavia' }
+  ].forEach(({ languageCode, localizedCityName }) => {
+    it(`should return translated city name and description [${languageCode}]`, async ({
+      request,
+      currentWeatherDataUrl
+    }) => {
+      const cityName = 'Warsaw';
 
-    const defaultLangUrl = new URL(currentWeatherDataUrl);
-    defaultLangUrl.searchParams.set('q', cityName);
+      const defaultLangUrl = new URL(currentWeatherDataUrl);
+      defaultLangUrl.searchParams.set('q', cityName);
 
-    const localizedLangUrl = new URL(currentWeatherDataUrl);
-    localizedLangUrl.searchParams.set('q', cityName);
-    localizedLangUrl.searchParams.set('lang', languageCode);
+      const localizedLangUrl = new URL(currentWeatherDataUrl);
+      localizedLangUrl.searchParams.set('q', cityName);
+      localizedLangUrl.searchParams.set('lang', languageCode);
 
-    const defaultLangResponse = await request.get(defaultLangUrl.toString());
-    await expect(defaultLangResponse).toHaveStatus(200);
+      const defaultLangResponse = await request.get(defaultLangUrl.toString());
+      await expect(defaultLangResponse).toHaveStatus(
+        httpConstants.HTTP_STATUS_OK
+      );
 
-    const localizedLangUrlResponse = await request.get(
-      localizedLangUrl.toString()
-    );
-    await expect(localizedLangUrlResponse).toHaveStatus(200);
+      const localizedLangUrlResponse = await request.get(
+        localizedLangUrl.toString()
+      );
+      await expect(localizedLangUrlResponse).toHaveStatus(
+        httpConstants.HTTP_STATUS_OK
+      );
 
-    const localizedLangData =
-      (await localizedLangUrlResponse.json()) as WeatherData;
-    expect(localizedLangData.name).toBe(cityNameFr);
-    const defaultLangData = (await defaultLangResponse.json()) as WeatherData;
+      const localizedLangData =
+        (await localizedLangUrlResponse.json()) as WeatherData;
+      expect(localizedLangData).toMatchSchema(weatherDataSchema);
+      expect(localizedLangData.name).toBe(localizedCityName);
 
-    const weatherDataLength = localizedLangData.weather.length;
-    for (let i = 0; i < weatherDataLength; i++) {
-      if (localizedLangData.weather[i].id === defaultLangData.weather[i].id) {
-        const localizedDescription = localizedLangData.weather[i].description;
-        const defaultDescription = defaultLangData.weather[i].description;
-        expect(localizedDescription).not.toBe(defaultDescription);
+      const defaultLangData = (await defaultLangResponse.json()) as WeatherData;
+
+      const weatherDataLength = localizedLangData.weather.length;
+      for (let i = 0; i < weatherDataLength; i++) {
+        if (localizedLangData.weather[i].id === defaultLangData.weather[i].id) {
+          const localizedDescription = localizedLangData.weather[i].description;
+          const defaultDescription = defaultLangData.weather[i].description;
+          expect(localizedDescription).not.toBe(defaultDescription);
+        }
       }
-    }
+    });
   });
 
   it('should handle request without location query parameters', async ({
@@ -175,7 +186,7 @@ it.describe('Current weather data API', () => {
   }) => {
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(400);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_BAD_REQUEST);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     const result = errorResponseSchema.safeParse(data);
@@ -191,7 +202,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(400);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_BAD_REQUEST);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     const result = errorResponseSchema.safeParse(data);
@@ -207,7 +218,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(400);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_BAD_REQUEST);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     const result = errorResponseSchema.safeParse(data);
@@ -223,7 +234,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(400);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_BAD_REQUEST);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     const result = errorResponseSchema.safeParse(data);
@@ -237,7 +248,7 @@ it.describe('Current weather data API', () => {
     url.searchParams.set('q', 'invalid');
 
     const response = await request.get(url.toString());
-    await expect(response).toHaveStatus(404);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_NOT_FOUND);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     expect(data).toEqual(currentWeatherResponseError.cityNotFound);
@@ -251,7 +262,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(404);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_NOT_FOUND);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     expect(data).toEqual(currentWeatherResponseError.cityNotFound);
@@ -267,7 +278,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(404);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_NOT_FOUND);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     expect(data).toEqual(currentWeatherResponseError.cityNotFound);
@@ -294,7 +305,9 @@ it.describe('Current weather data API', () => {
     const standardUnitsResponse = await request.get(
       standardUnitsUrl.toString()
     );
-    await expect(standardUnitsResponse).toHaveStatus(200);
+    await expect(standardUnitsResponse).toHaveStatus(
+      httpConstants.HTTP_STATUS_OK
+    );
     const dataInStandardUnits =
       (await standardUnitsResponse.json()) as WeatherData;
     expect(dataInStandardUnits.main).toMatchSchema(weatherDataMainSchema);
@@ -302,15 +315,33 @@ it.describe('Current weather data API', () => {
     const imperialUnitResponse = await request.get(
       imeperialUnitsUrl.toString()
     );
-    await expect(imperialUnitResponse).toHaveStatus(200);
+    await expect(imperialUnitResponse).toHaveStatus(
+      httpConstants.HTTP_STATUS_OK
+    );
     const dataInImperialUnits =
       (await imperialUnitResponse.json()) as WeatherData;
     expect(dataInImperialUnits.main).toMatchSchema(weatherDataMainSchema);
 
     const metricUnitsResponse = await request.get(metricUnitsUrl.toString());
-    await expect(metricUnitsResponse).toHaveStatus(200);
+    await expect(metricUnitsResponse).toHaveStatus(
+      httpConstants.HTTP_STATUS_OK
+    );
     const dataInMetricUnits = (await metricUnitsResponse.json()) as WeatherData;
     expect(dataInMetricUnits.main).toMatchSchema(weatherDataMainSchema);
+
+    // Fahrenheit temperature should not be equal to Kelvin
+    expect(dataInStandardUnits.main.temp).not.toBe(
+      dataInImperialUnits.main.temp
+    );
+    expect(dataInStandardUnits.main.feels_like).not.toBe(
+      dataInImperialUnits.main.feels_like
+    );
+    expect(dataInStandardUnits.main.temp_min).not.toBe(
+      dataInImperialUnits.main.temp_min
+    );
+    expect(dataInStandardUnits.main.temp_max).not.toBe(
+      dataInImperialUnits.main.temp_max
+    );
 
     // Kelvin temperature should be higher than Celsius
     expect(dataInStandardUnits.main.temp).toBeGreaterThan(
@@ -326,19 +357,35 @@ it.describe('Current weather data API', () => {
       dataInMetricUnits.main.temp_max
     );
 
-    // Fahrenheit temperature should be higher than Celsius
-    expect(dataInImperialUnits.main.temp).toBeGreaterThan(
-      dataInMetricUnits.main.temp
-    );
-    expect(dataInImperialUnits.main.feels_like).toBeGreaterThan(
-      dataInMetricUnits.main.feels_like
-    );
-    expect(dataInImperialUnits.main.temp_min).toBeGreaterThan(
-      dataInMetricUnits.main.temp_min
-    );
-    expect(dataInImperialUnits.main.temp_max).toBeGreaterThan(
-      dataInMetricUnits.main.temp_max
-    );
+    // One point on the Fahrenheit and Celsius scales where the temperatures in degrees are equal.
+    if (
+      dataInImperialUnits.main.temp === -40 &&
+      dataInMetricUnits.main.temp === -40
+    ) {
+      expect(dataInImperialUnits.main.feels_like).toBeGreaterThanOrEqual(
+        dataInMetricUnits.main.feels_like
+      );
+      expect(dataInImperialUnits.main.temp_min).toBeGreaterThanOrEqual(
+        dataInMetricUnits.main.temp_min
+      );
+      expect(dataInImperialUnits.main.temp_max).toBeGreaterThanOrEqual(
+        dataInMetricUnits.main.temp_max
+      );
+    } else {
+      // Fahrenheit temperature should be higher than Celsius
+      expect(dataInImperialUnits.main.temp).toBeGreaterThan(
+        dataInMetricUnits.main.temp
+      );
+      expect(dataInImperialUnits.main.feels_like).toBeGreaterThan(
+        dataInMetricUnits.main.feels_like
+      );
+      expect(dataInImperialUnits.main.temp_min).toBeGreaterThan(
+        dataInMetricUnits.main.temp_min
+      );
+      expect(dataInImperialUnits.main.temp_max).toBeGreaterThan(
+        dataInMetricUnits.main.temp_max
+      );
+    }
   });
 
   it('should handle unauthorized request', async ({
@@ -349,7 +396,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(401);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_UNAUTHORIZED);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     expect(data).toEqual(currentWeatherResponseError.invalidApiKey);
@@ -364,7 +411,7 @@ it.describe('Current weather data API', () => {
 
     const response = await request.get(url.toString());
 
-    await expect(response).toHaveStatus(401);
+    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_UNAUTHORIZED);
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     expect(data).toEqual(currentWeatherResponseError.invalidApiKey);
