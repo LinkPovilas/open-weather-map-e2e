@@ -86,6 +86,8 @@ npm run report
 
 It's based on my [style guide](https://github.com/LinkPovilas/end-to-end-test-guides/blob/main/docs/playwright-style-guide.md) which I created to maintain consistency, document lessons learned, and share it with others.
 
+Tests were written with parallelization in CI in mind (see [test sharding](https://playwright.dev/docs/test-sharding)) to ensure that they do not interfere with each other. I considered creating a "cleanup test job" to run before other tests and delete all API keys except the default one when running in CI. However, this is beyond the scope of the task requirements.
+
 Hopefully, each section of the document will help you better understand the decisions made in completing the task.
 
 ## Test Setup
