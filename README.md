@@ -6,6 +6,7 @@ This repository contains tests for https://openweathermap.org/
 
 - [Introduction](#introduction)
 - [Table Of Contents](#table-of-contents)
+- [Prerequisites](#prerequisites)
 - [System Requirements](#system-requirements)
 - [Setup](#setup)
 - [Running Tests](#running-tests)
@@ -17,6 +18,28 @@ This repository contains tests for https://openweathermap.org/
     - [Chosen Approach To Writing UI Tests](#chosen-approach-to-writing-ui-tests)
   - [API](#api)
     - [Chosen Approach To Writing API Tests](#chosen-approach-to-writing-api-tests)
+
+# Prerequisites
+
+Adjust values based on the test environment:
+
+1. An active account. ([Register in Prod](https://home.openweathermap.org/users/sign_up))
+2. An activated API key. ([My API Keys in Prod](https://home.openweathermap.org/api_keys))
+3. A home page URL. Prod: "https://home.openweathermap.org/"
+4. A base API URL. Prod: "https://api.openweathermap.org/"
+
+Copy the `.env.example` file, rename it to `.env` and fill in the values.
+
+Example:
+
+```Shell
+# .env
+API_KEY=123456
+BASE_URL=https://home.openweathermap.org/
+BASE_API_URL=https://api.openweathermap.org/
+USER_EMAIL=test@gmail.com
+USER_PASSWORD=Test@2024_UI_API
+```
 
 # System Requirements
 
