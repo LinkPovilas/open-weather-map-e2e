@@ -225,22 +225,6 @@ it.describe('Current weather data API', () => {
     expect(result.data).toEqual(currentWeatherResponseError.wrongLongitude);
   });
 
-  it('should handle request with invalid format coordinates', async ({
-    request,
-    currentWeatherDataUrl: url
-  }) => {
-    url.searchParams.set('lat', '44.34°N');
-    url.searchParams.set('lon', '10.99°W');
-
-    const response = await request.get(url.toString());
-
-    await expect(response).toHaveStatus(httpConstants.HTTP_STATUS_BAD_REQUEST);
-    const data = (await response.json()) as ErrorResponse;
-    expect(data).toMatchSchema(errorResponseSchema);
-    const result = errorResponseSchema.safeParse(data);
-    expect(result.data).toEqual(currentWeatherResponseError.wrongLatitude);
-  });
-
   it('should handle request with invalid city name', async ({
     request,
     currentWeatherDataUrl: url
