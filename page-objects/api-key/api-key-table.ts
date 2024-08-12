@@ -19,6 +19,13 @@ export class ApiKeyTable extends PageObject {
   /**
    * Opens the edit API key modal by clicking the edit button for the API key with the specified name.
    *
+   * **Usage**
+   *
+   * ```js
+   * await apiKeyTable.clickEditKeyName(apiKey.name);
+   * await editApiKeyModal.updateApiKeyName(newApiKeyName);
+   * ```
+   *
    * @param {string} apiKeyName - The name of the API key to edit.
    */
   async clickEditKeyName(apiKeyName: string) {

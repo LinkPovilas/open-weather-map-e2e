@@ -28,6 +28,13 @@ export class EditApiKeyModal extends PageObject {
   /**
    * Updates the API key name.
    *
+   * **Usage**
+   *
+   * ```js
+   * await apiKeyTable.clickEditKeyName(apiKey.name);
+   * await editApiKeyModal.updateApiKeyName(newApiKeyName);
+   * ```
+   *
    * @param {string} apiKeyName - The new API key name to update.
    */
   async updateApiKeyName(apiKeyName: string) {
