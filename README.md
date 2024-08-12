@@ -98,7 +98,7 @@ The tests share authentication setup which consists of the user interface steps 
 
 ### Interacting With Page Elements
 
-I've decided to use [Lean Page Objects](https://github.com/LinkPovilas/end-to-end-test-guides/blob/main/docs/playwright-style-guide.md#page-objects) (or "Page Component Objects") to drive the UI tests.
+I've decided to use [Lean Page Objects](https://github.com/LinkPovilas/end-to-end-test-guides/blob/main/docs/playwright-style-guide.md#page-objects) (or "Page Component Objects") to drive the UI tests. I prefer this pattern because it promotes more focused classes, each with a distinct responsibility, avoiding the issue of "God Object" page objects that handle too many tasks. It works particularly well for tests involving the same web components that are reused across different pages. I learned about this approach from the [SerenityJS test framework](https://serenity-js.org/handbook/web-testing/page-objects-pattern/).
 
 - Their state and dependencies are handled by Playwright (see fixture files).
 - Chosen locator strategies are based on the recommendations by [Playwright](https://playwright.dev/docs/locators#locate-by-role) and [Testing library](https://testing-library.com/docs/queries/about#priority) teams. Some of the web elements lacked meaningful ways how to locate them (such as dropdown menu).
