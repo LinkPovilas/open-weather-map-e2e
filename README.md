@@ -106,11 +106,11 @@ I've decided to use [Lean Page Objects](https://github.com/LinkPovilas/end-to-en
 
 ### Chosen Approach To Writing UI Tests
 
-Since we start in an already authenticated state for each test, I've decided to move the steps needed to navigate to the "My API Keys" page into a separate test suite, and instead navigate directly to the page URL.
+Since we start each test in an already authenticated state, I've decided to move the steps needed to navigate to the "My API Keys" page into a separate test suite and instead navigate directly to the page URL.
 
 I created an `apiKey` fixture, which is used in both UI and API tests to avoid setup duplication.
 
-Splitting by concern like this, in my opinion, allows us to have shorter, more focused tests without sacrificing test coverage.
+In my opinion, splitting by concern in this way allows us to have shorter, more focused tests without sacrificing test coverage.
 
 ## API
 
@@ -123,7 +123,7 @@ I created custom matchers:
 - `toHaveStatus(number)` to validate HTTP status code and throw an error with response body and header details, because I wanted to have quick feedback to understand what was the error and also, hypothetically, to be able to investigate application logs more quickly when required, for example, by something like `traceId` response header.
 - `toMatchSchema(zodSchema)` to validate by schema, so I would not have to repeat myself and keep the code as DRY as possible.
 
-Custom matcher `toMatchSchema(zodSchema)` requires for the provided data to have some type other than `any`. I chose to use Zod library to infer the types from the schemas, instead of using `unknown` type or creating `interfaces` manually.
+Custom matcher `toMatchSchema(zodSchema)` requires for the provided data to have some type other than `any`. I chose to use Zod library to infer the types from the schemas, instead of using `unknown` type or defining interfaces manually.
 
 ### Chosen Approach To Writing API Tests
 
