@@ -238,7 +238,7 @@ it.describe('Current weather data API', () => {
     const data = (await response.json()) as ErrorResponse;
     expect(data).toMatchSchema(errorResponseSchema);
     const result = errorResponseSchema.safeParse(data);
-    expect(result.data).toEqual(currentWeatherResponseError.nothingToGeocode);
+    expect(result.data).toEqual(currentWeatherResponseError.wrongLatitude);
   });
 
   it('should handle request with invalid city name', async ({
