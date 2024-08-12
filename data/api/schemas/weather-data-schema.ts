@@ -72,4 +72,4 @@ const weatherDataSchema = z.object({
 
 type WeatherData = z.infer<typeof weatherDataSchema>;
 
-export { weatherDataSchema, WeatherData };
+export { weatherDataSchema, WeatherData, mainSchema as weatherDataMainSchema };
