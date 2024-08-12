@@ -11,13 +11,13 @@ This repository contains tests for https://openweathermap.org/
 - [Setup](#setup)
 - [Running Tests](#running-tests)
 - [Viewing The Last Test Report](#viewing-the-last-test-report)
-- [Taken Approach](#taken-approach)
+- [Chosen Approach](#chosen-approach)
   - [Test Setup](#test-setup)
   - [UI](#ui)
     - [Interacting With Page Elements](#interacting-with-page-elements)
-    - [Chosen Approach To Writing UI Tests](#chosen-approach-to-writing-ui-tests)
+    - [Chosen Approach For Writing UI Tests](#chosen-approach-for-writing-ui-tests)
   - [API](#api)
-    - [Chosen Approach To Writing API Tests](#chosen-approach-to-writing-api-tests)
+    - [Chosen Approach For Writing API Tests](#chosen-approach-for-writing-api-tests)
 
 # Prerequisites
 
@@ -82,7 +82,7 @@ npm run debug
 npm run report
 ```
 
-# Taken Approach
+# Chosen Approach
 
 It's based on my [style guide](https://github.com/LinkPovilas/end-to-end-test-guides/blob/main/docs/playwright-style-guide.md) which I created to maintain consistency, document lessons learned, and share it with others.
 
@@ -104,7 +104,7 @@ I've decided to use [Lean Page Objects](https://github.com/LinkPovilas/end-to-en
 - Chosen locator strategies are based on the recommendations by [Playwright](https://playwright.dev/docs/locators#locate-by-role) and [Testing library](https://testing-library.com/docs/queries/about#priority) teams. Some of the web elements lacked meaningful ways how to locate them (such as dropdown menu).
 - For class methods and utility functions I've added JSDoc comments so the user could see additional information, such as usage, in the tooltip by hovering over the code line. For example: ![tooltip](./docs/tooltip.png)
 
-### Chosen Approach To Writing UI Tests
+### Chosen Approach For Writing UI Tests
 
 Since we start each test in an already authenticated state, I've decided to move the steps needed to navigate to the "My API Keys" page into a separate test suite and instead navigate directly to the page URL.
 
@@ -127,12 +127,12 @@ I created custom matchers:
 
 Custom matcher `toMatchSchema(zodSchema)` requires for the provided data to have some type other than `any`. I chose to use Zod library to infer the types from the schemas, instead of using `unknown` type or defining interfaces manually.
 
-### Chosen Approach To Writing API Tests
+### Chosen Approach For Writing API Tests
 
 I wrote several tests to cover main functionality scenarios and error handling.
 
 Interesting cases:
 
-- There is a test to validate that a newly created API key is not a valid key yet, because it might take a couple hours to activate it. See https://openweathermap.org/faq#error401. Test reuses `apiKey` fixture.
-- For testing different unit of measurements I compared the values making sure that Fahrenheit values were not equal to Kelvin, and Kelvin was higher than Celsius, and that Fahrenheit was higher than Celsius, except for one specific case. As a safeguard I also added schema validations to ensure numeric values for temperatures.
-- For testing if city names and description are translated, I provided an example of a [data driven test](https://playwright.dev/docs/test-parameterize#parameterized-tests).To ensure that the properties were translated, I checked if the city name was equal to the expected one and compared the descriptions expecting them not to match - if they matched it would mean that both are in English. Just in case, I added schema validation to avoid cases where description contained `null` value or similar.
+- There is a test to validate that a newly created API key is not immediately valid, as it may take a couple of hours to activate. See https://openweathermap.org/faq#error401. Test reuses `apiKey` fixture.
+- For testing different units of measurement, I compared values to ensure that Fahrenheit was not equal to Kelvin, Kelvin was higher than Celsius, and Fahrenheit was higher than Celsius, except for one specific case. As a safeguard, I also added schema validations to ensure that temperature values are numeric.
+- To test if city names and descriptions are translated, I provided an example of a [data driven test](https://playwright.dev/docs/test-parameterize#parameterized-tests). To ensure the properties were translated correctly, I checked if the city name matched the expected one and compared the descriptions received from API requests, expecting them not to match - if they did match, it would indicate that both were in English. Additionally, I added schema validation to prevent cases where the description contained a `null` value.
