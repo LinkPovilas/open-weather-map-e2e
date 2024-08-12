@@ -112,6 +112,8 @@ I created an `apiKey` fixture, which is used in both UI and API tests to avoid s
 
 In my opinion, splitting by concern in this way allows us to have shorter, more focused tests without sacrificing test coverage.
 
+In the test that updates the API key name, it validates that the API key value remains unchanged and that there are no other entries with the same apiKey.
+
 ## API
 
 I chose to use the `URL()` constructor to have a flexible way to modify the API request URLs.

@@ -19,5 +19,8 @@ it.describe('API key management', () => {
     const sameApiKeyAsBefore = await apiKeyTable.getApiKeyByName(newApiKeyName);
 
     expect(sameApiKeyAsBefore).toEqual(apiKey.value);
+    await expect(
+      apiKeyTable.tableCell.filter({ hasText: newApiKeyName })
+    ).toHaveCount(1);
   });
 });
