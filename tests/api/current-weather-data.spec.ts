@@ -182,7 +182,39 @@ it.describe('Current weather data API', () => {
     expect(result.data).toEqual(currentWeatherResponseError.nothingToGeocode);
   });
 
-  it('should handle request with invalid coordinates', async ({
+  it('should handle request with invalid latitude', async ({
+    request,
+    currentWeatherDataUrl: url
+  }) => {
+    url.searchParams.set('lat', '-91');
+    url.searchParams.set('lon', '-180');
+
+    const response = await request.get(url.toString());
+
+    await expect(response).toHaveStatus(400);
+    const data = (await response.json()) as ErrorResponse;
+    expect(data).toMatchSchema(errorResponseSchema);
+    const result = errorResponseSchema.safeParse(data);
+    expect(result.data).toEqual(currentWeatherResponseError.wrongLatitude);
+  });
+
+  it('should handle request with invalid longitude', async ({
+    request,
+    currentWeatherDataUrl: url
+  }) => {
+    url.searchParams.set('lat', '-90');
+    url.searchParams.set('lon', '-181');
+
+    const response = await request.get(url.toString());
+
+    await expect(response).toHaveStatus(400);
+    const data = (await response.json()) as ErrorResponse;
+    expect(data).toMatchSchema(errorResponseSchema);
+    const result = errorResponseSchema.safeParse(data);
+    expect(result.data).toEqual(currentWeatherResponseError.wrongLongitude);
+  });
+
+  it('should handle request with invalid format coordinates', async ({
     request,
     currentWeatherDataUrl: url
   }) => {

@@ -3,6 +3,14 @@ export const currentWeatherResponseError = {
     cod: 400,
     message: 'Nothing to geocode'
   },
+  wrongLatitude: {
+    cod: 400,
+    message: 'wrong latitude'
+  },
+  wrongLongitude: {
+    cod: 400,
+    message: 'wrong longitude'
+  },
   invalidApiKey: {
     cod: 401,
     message:
