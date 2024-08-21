@@ -2,8 +2,6 @@ import { expect as baseExpect } from '@playwright/test';
 import type { APIResponse } from '@playwright/test';
 import { ZodSchema } from 'zod';
 
-export { test } from '@playwright/test';
-
 export const expect = baseExpect.extend({
   async toHaveStatus(response: APIResponse, expected: number) {
     const assertionName = 'toHaveStatus';

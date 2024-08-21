@@ -103,6 +103,7 @@ I've decided to use [Lean Page Objects](https://github.com/LinkPovilas/end-to-en
 - Their state and dependencies are handled by Playwright (see fixture files).
 - Chosen locator strategies are based on the recommendations by [Playwright](https://playwright.dev/docs/locators#locate-by-role) and [Testing library](https://testing-library.com/docs/queries/about#priority) teams. Some of the web elements lacked meaningful ways how to locate them (such as dropdown menu).
 - For class methods and utility functions I've added JSDoc comments so the user could see additional information, such as usage, in the tooltip by hovering over the code line. For example: ![tooltip](./docs/tooltip.png)
+- I've added an underscore prefix to the fixture property names for component objects (e.g., `_signInForm`) to indicate that these objects should not be used directly in tests, except when debugging. Instead, page objects should be used. The underscore prefix in JavaScript is a convention used to signify that a property or method is intended to be private or for internal use only.
 
 ### Chosen Approach For Writing UI Tests
 

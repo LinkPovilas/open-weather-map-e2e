@@ -1,6 +1,6 @@
-import { PageObject } from '../page-object';
+import { Component } from '../component';
 
-export class ApiKeyTable extends PageObject {
+export class ApiKeyTable extends Component {
   get self() {
     return this.page.getByRole('table');
   }

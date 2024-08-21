@@ -7,10 +7,10 @@ it.describe('Navigation', () => {
   });
 
   it('should redirect user to the API keys page', async ({
-    navigationBar,
+    homePage,
     page
   }) => {
-    await navigationBar.goToUserApiKeys();
+    await homePage.navigationBar.goToUserApiKeys();
     await expect(page).toHaveURL(urlPath.apiKeysPage);
   });
 });

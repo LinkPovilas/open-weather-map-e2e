@@ -1,8 +1,8 @@
 import { Page } from '@playwright/test';
-import { PageObject } from '../page-object';
+import { Component } from '../component';
 import type { UserDropdownMenu } from './user-dropdown-menu';
 
-export class NavigationBar extends PageObject {
+export class NavigationBar extends Component {
   constructor(
     page: Page,
     private readonly userMenu: UserDropdownMenu

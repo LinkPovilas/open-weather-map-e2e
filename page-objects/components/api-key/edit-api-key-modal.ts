@@ -1,6 +1,6 @@
-import { PageObject } from 'page-objects/page-object';
+import { Component } from 'page-objects/components/component';
 
-export class EditApiKeyModal extends PageObject {
+export class EditApiKeyModal extends Component {
   get apiKeyNameField() {
     return this.page.getByLabel('API key name');
   }

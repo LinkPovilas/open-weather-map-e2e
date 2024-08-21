@@ -1,11 +1,11 @@
-import { PageObject } from '../page-object';
+import { Component } from '../component';
 
 export interface UserCredentials {
   email: string;
   password: string;
 }
 
-export class SignInForm extends PageObject {
+export class SignInForm extends Component {
   get emailField() {
     return this.page.getByLabel('Email');
   }

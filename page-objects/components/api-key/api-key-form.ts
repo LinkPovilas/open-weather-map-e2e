@@ -1,6 +1,6 @@
-import { PageObject } from '../page-object';
+import { Component } from '../component';
 
-export class ApiKeyForm extends PageObject {
+export class ApiKeyForm extends Component {
   get apiKeyNameField() {
     return this.page.getByPlaceholder('API key name');
   }

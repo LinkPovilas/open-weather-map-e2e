@@ -3,24 +3,20 @@ import { it, expect } from 'fixtures';
 import { generateRandomApiKeyName } from 'utils/test-data-utils';
 
 it.describe('API key management', () => {
-  it('should update API key name', async ({
-    apiKey,
-    apiKeyTable,
-    editApiKeyModal,
-    page
-  }) => {
+  it('should update API key name', async ({ apiKey, apiKeysPage, page }) => {
     const newApiKeyName = generateRandomApiKeyName();
 
-    await apiKeyTable.clickEditKeyName(apiKey.name);
-    await editApiKeyModal.updateApiKeyName(newApiKeyName);
+    await apiKeysPage.apiKeyTable.clickEditKeyName(apiKey.name);
+    await apiKeysPage.editApiKeyModal.updateApiKeyName(newApiKeyName);
     await expect(page.locator('body')).toContainText(
       noticeMessage.apiKeyEditedSuccessfully
     );
-    const sameApiKeyAsBefore = await apiKeyTable.getApiKeyByName(newApiKeyName);
+    const sameApiKeyAsBefore =
+      await apiKeysPage.apiKeyTable.getApiKeyByName(newApiKeyName);
 
     expect(sameApiKeyAsBefore).toEqual(apiKey.value);
     await expect(
-      apiKeyTable.tableCell.filter({ hasText: newApiKeyName })
+      apiKeysPage.apiKeyTable.tableCell.filter({ hasText: newApiKeyName })
     ).toHaveCount(1);
   });
 });
