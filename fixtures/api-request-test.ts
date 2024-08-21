@@ -1,4 +1,4 @@
-import { test as base } from './page-task-test';
+import { test as base } from '@playwright/test';
 import { env } from 'env';
 import { endpoint } from 'data/api/endpoint';
 

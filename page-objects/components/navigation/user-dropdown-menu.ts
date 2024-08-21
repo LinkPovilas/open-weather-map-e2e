@@ -1,6 +1,6 @@
-import { PageObject } from '../page-object';
+import { Component } from '../component';
 
-export class UserDropdownMenu extends PageObject {
+export class UserDropdownMenu extends Component {
   get self() {
     return this.page.locator('#user-dropdown');
   }

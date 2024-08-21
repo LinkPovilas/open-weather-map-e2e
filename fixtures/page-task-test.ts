@@ -1,6 +1,7 @@
+import { test as base } from './page-object-test';
 import { generateRandomApiKeyName } from 'utils/test-data-utils';
-import { test as base, expect } from './page-object-test';
 import { urlPath } from 'data/ui/url-path';
+import { expect } from './custom-matchers';
 
 interface ApiKey {
   name: string;
@@ -12,11 +13,11 @@ interface PageTask {
 }
 
 export const test = base.extend<PageTask>({
-  apiKey: async ({ page, apiKeyForm, apiKeyTable }, use) => {
+  apiKey: async ({ page, apiKeysPage }, use) => {
     await page.goto(urlPath.apiKeysPage);
     const name = generateRandomApiKeyName();
-    await apiKeyForm.createApiKey(name);
-    const apiKey = await apiKeyTable.getApiKeyByName(name);
+    await apiKeysPage.apiKeyForm.createApiKey(name);
+    const apiKey = await apiKeysPage.apiKeyTable.getApiKeyByName(name);
     expect(apiKey).toBeTruthy();
     await use({ name, value: apiKey });
   }
